@@ -11,19 +11,17 @@ typedef struct
 
 #define COMMAND_NUM 7
 Command commands[COMMAND_NUM] = {
-    {"gpio0", 0},
-    {"gpio1", 1},
-    {"gpio2", 2},
-    {"gpio3", 3},
-    {"gpio4", 4},
-    {"gpio5", 5},
-    {"gpio6", 6}};
+    {"nodemcu/gpio/gpio0", 0},
+    {"nodemcu/gpio/gpio1", 1},
+    {"nodemcu/gpio/gpio2", 2},
+    {"nodemcu/gpio/gpio3", 3},
+    {"nodemcu/gpio/gpio4", 4},
+    {"nodemcu/gpio/gpio5", 5},
+    {"nodemcu/gpio/gpio6", 6}};
 
 const char *ssid = "........";
 const char *password = "........";
 const char *mqtt_server = "broker.mqtt-dashboard.com";
-const char *path = "nodemcu/gpio/";
-const char *topic = "pin";
 const char *clientName = "ESP32";
 
 WiFiClient espClient;
