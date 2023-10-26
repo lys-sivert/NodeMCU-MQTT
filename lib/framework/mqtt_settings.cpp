@@ -12,8 +12,6 @@ typedef struct
 
 WiFiClient wifi_client;
 
-#define MAX_COMMANDS 64 // the maximum of assignable callbacks to topics
-
 extern MQTT_Command commands[MAX_COMMANDS]; // the commands themselves
 
 namespace MQTT

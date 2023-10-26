@@ -1,5 +1,7 @@
 #pragma once
 #include <PubSubClient.h>
+#define MAX_COMMANDS 64 // the maximum of assignable callbacks to topics
+
 typedef std::function<void(byte *)> MQTT_CALLBACK;
 
 namespace MQTT
