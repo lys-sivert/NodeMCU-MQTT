@@ -1,5 +1,4 @@
 #pragma once
-namespace WIFI
-{
-    void init(const char *ssid, const char *password);
+namespace WIFI {
+void init(const char *ssid, const char *password);
 }
