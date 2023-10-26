@@ -97,7 +97,7 @@ bool add_datapoint(char *path, SendMode mode, uint32_t interval, MQTT_DATA_CALLB
     return true;
 }
 
-void init(const char *broker, const char *name, int port = 1883) {
+void init(const char *broker, const char *name, int port) {
     client.setServer(broker, port);
     client.setCallback(_process_message);
 }
