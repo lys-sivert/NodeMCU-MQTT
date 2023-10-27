@@ -11,7 +11,7 @@ void MQTTClient::_process_message(char *topic, byte *payload, unsigned int lengt
     }
 }
 
-MQTTClient::MQTTClient(Client &client, const char *broker, const char *name, int port) {
+bool MQTTClient::connect(Client &client, const char *broker, const char *name, int port) {
     _client.setClient(client);
 
     _client.setServer(broker, port);
@@ -19,9 +19,12 @@ MQTTClient::MQTTClient(Client &client, const char *broker, const char *name, int
     // this needed to be wrapped up in a lambda to coerce into a std::function type, this is big dumbo code
     _client.setCallback(
         [this](char *topic, uint8_t *payload, unsigned int length) { this->_process_message(topic, payload, length); });
+    return true;
 }
 
-MQTTClient::MQTTClient(Client &client, const char *broker, const char *name) { MQTTClient(client, broker, name, 1883); }
+bool MQTTClient::connect(Client &client, const char *broker, const char *name) {
+    return connect(client, broker, name, 1883);
+}
 
 void MQTTClient::update() {
     if (!_client.connected()) {

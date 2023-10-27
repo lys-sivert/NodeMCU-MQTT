@@ -11,8 +11,8 @@ class MQTTClient {
     typedef std::function<String()> MQTT_DATA_CALLBACK;
     enum SendMode { Interval, Change };
 
-    MQTTClient(Client &client, const char *broker, const char *name);
-    MQTTClient(Client &client, const char *broker, const char *name, int port);
+    bool connect(Client &client, const char *broker, const char *name);
+    bool connect(Client &client, const char *broker, const char *name, int port);
 
     void update();
 
