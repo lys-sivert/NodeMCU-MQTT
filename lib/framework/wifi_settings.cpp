@@ -2,9 +2,7 @@
 
 #include <ESP8266WiFi.h>
 
-namespace WIFI {
-WiFiClient client;
-void init(const char *ssid, const char *password) {
+WIFI_Class::WIFI_Class(const char *ssid, const char *password) {
     delay(10);
 
     WiFi.mode(WIFI_STA);
@@ -13,4 +11,3 @@ void init(const char *ssid, const char *password) {
     while (WiFi.status() != WL_CONNECTED) {
     }
 }
-}  // namespace WIFI

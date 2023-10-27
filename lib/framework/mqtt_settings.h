@@ -24,7 +24,7 @@ class MQTT_Class {
      * @param callback a function that takes in the MQTT payload as input
      * @return true if the command is succesfully added
      */
-    bool add_command(char *path, MQTT_CALLBACK callback);
+    bool add_command(const char *path, MQTT_CALLBACK callback);
 
     /**
      * @brief Adds a datapoint to the MQTT client, a datapoint is simply a function that is called on an interval.
@@ -35,7 +35,7 @@ class MQTT_Class {
      * @param callback a function that returns a String containing the data
      * @return true if the datapoint is succesfully added
      */
-    bool add_datapoint(char *path, SendMode mode, uint32_t interval, MQTT_DATA_CALLBACK callback);
+    bool add_datapoint(const char *path, SendMode mode, uint32_t interval, MQTT_DATA_CALLBACK callback);
 
    private:
     void _process_message(char *topic, uint8_t *payload, unsigned int length);

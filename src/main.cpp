@@ -12,11 +12,10 @@ const char *mqtt_client_name = "........";
 void set_pin_0(byte *payload) { digitalWrite(0, payload[0] != '0'); }
 String get_pin_state() { return String("Hello"); }
 
-MQTT_Class mqtt(WIFI::client, mqtt_broker, mqtt_client_name);
+WIFI_Class wifi(ssid, password);
+MQTT_Class mqtt(wifi.client, mqtt_broker, mqtt_client_name);
 
 void setup() {
-    WIFI::init(ssid, password);
-
     mqtt.add_command("gpio/set/0", set_pin_0);
     mqtt.add_datapoint("gpio/state/0", MQTT_Class::Interval, 1000, get_pin_state);
 }

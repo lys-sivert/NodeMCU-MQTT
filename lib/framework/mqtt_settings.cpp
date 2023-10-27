@@ -61,7 +61,7 @@ void MQTT_Class::_reconnect() {
     }
 }
 
-bool MQTT_Class::add_datapoint(char *path, SendMode mode, uint32_t interval, MQTT_DATA_CALLBACK callback) {
+bool MQTT_Class::add_datapoint(const char *path, SendMode mode, uint32_t interval, MQTT_DATA_CALLBACK callback) {
     if (_num_points_assigned == MAX_POINTS) return false;
     _points[_num_points_assigned] = MQTT_Point{
         topic : path,
@@ -80,7 +80,7 @@ bool MQTT_Class::add_datapoint(char *path, SendMode mode, uint32_t interval, MQT
     return true;
 }
 
-bool MQTT_Class::add_command(char *path, MQTT_CALLBACK callback) {
+bool MQTT_Class::add_command(const char *path, MQTT_CALLBACK callback) {
     if (_num_commands_assigned == MAX_COMMANDS) return false;
     _commands[_num_commands_assigned].callback = callback;
     _commands[_num_commands_assigned].topic = path;
