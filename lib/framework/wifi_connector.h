@@ -12,5 +12,5 @@ class WIFIConnector {
      * @param password the password of the network
      * @return true if the connection is successful
      */
-    bool connect(const char *ssid, const char *password);
+    bool connect_blocking(const char *ssid, const char *password);
 };

@@ -11,8 +11,26 @@ class MQTTClient {
     typedef std::function<String()> MQTT_DATA_CALLBACK;
     enum SendMode { Interval, Change };
 
-    bool connect(Client &client, const char *broker, const char *name);
-    bool connect(Client &client, const char *broker, const char *name, int port);
+    int connect(Client &client, const char *broker, const char *name);
+    int connect(Client &client, const char *broker, const char *name, int port);
+    int connect(Client &client, const char *broker, const char *id, int port, const char *username,
+                const char *password);
+    /**
+     * @note MQTT_CONNECTION_TIMEOUT     -4\n
+     * @note MQTT_CONNECTION_LOST        -3
+     * @note MQTT_CONNECT_FAILED         -2
+     * @note MQTT_DISCONNECTED           -1
+     * @note MQTT_CONNECTED               0
+     * @note MQTT_CONNECT_BAD_PROTOCOL    1
+     * @note MQTT_CONNECT_BAD_CLIENT_ID   2
+     * @note MQTT_CONNECT_UNAVAILABLE     3
+     * @note MQTT_CONNECT_BAD_CREDENTIALS 4
+     * @note MQTT_CONNECT_UNAUTHORIZED    5
+     * ```
+     *
+     * @return int
+     */
+    int status();
 
     void update();
 

@@ -5,26 +5,39 @@
 
 void MQTTClient::_process_message(char *topic, byte *payload, unsigned int length) {
     for (int i = 0; i < _num_commands_assigned; i++) {
-        if (strcmp(_commands[i].topic, topic)) {
+        if (strcmp(_commands[i].topic, topic) == 0) {
+            Serial.println("Eq");
             _commands[i].callback(payload);
         }
     }
 }
 
-bool MQTTClient::connect(Client &client, const char *broker, const char *name, int port) {
+int MQTTClient::connect(Client &client, const char *broker, const char *id, int port) {
+    return connect(client, broker, id, 1883, NULL, NULL);
+}
+
+int MQTTClient::connect(Client &client, const char *broker, const char *id, int port, const char *username,
+                        const char *password) {
     _client.setClient(client);
 
     _client.setServer(broker, port);
 
+    _client.connect(id, username, password);
+
     // this needed to be wrapped up in a lambda to coerce into a std::function type, this is big dumbo code
-    _client.setCallback(
-        [this](char *topic, uint8_t *payload, unsigned int length) { this->_process_message(topic, payload, length); });
-    return true;
+    _client.setCallback([this](char *topic, uint8_t *payload, unsigned int length) {
+        Serial.println("Hello");
+        Serial.println(topic);
+        this->_process_message(topic, payload, length);
+    });
+    return status();
 }
 
-bool MQTTClient::connect(Client &client, const char *broker, const char *name) {
-    return connect(client, broker, name, 1883);
+int MQTTClient::connect(Client &client, const char *broker, const char *id) {
+    return connect(client, broker, id, 1883);
 }
+
+int MQTTClient::status() { return _client.state(); }
 
 void MQTTClient::update() {
     if (!_client.connected()) {
@@ -34,8 +47,8 @@ void MQTTClient::update() {
     uint32_t current_time = millis();
     _client.loop();
     for (int i = 0; i < _num_points_assigned; i++) {
-        if (current_time + _points[i].interval > _points[i].next_trigger) {
-            _points[i].next_trigger = current_time + _points[i].interval;
+        if (current_time - _points[i].next_trigger > _points[i].interval) {
+            _points[i].next_trigger = current_time;
 
             String new_value = _points[i].callback();
             if (_points[i].mode == SendMode::Change) {
@@ -80,5 +93,6 @@ bool MQTTClient::add_command(const char *path, MQTT_CALLBACK callback) {
     _commands[_num_commands_assigned].callback = callback;
     _commands[_num_commands_assigned].topic = path;
     _num_commands_assigned++;
+    _client.subscribe(path);
     return true;
 }

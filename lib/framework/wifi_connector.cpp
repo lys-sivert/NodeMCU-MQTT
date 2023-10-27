@@ -2,26 +2,24 @@
 
 #include <ESP8266WiFi.h>
 
-WIFIConnector::WIFIConnector() {
-    delay(10);
+WIFIConnector::WIFIConnector() {}
 
+bool WIFIConnector::connect_blocking(const char *ssid, const char *password) {
     WiFi.mode(WIFI_STA);
-}
-
-bool WIFIConnector::connect(const char *ssid, const char *password) {
     WiFi.begin(ssid, password);
 
+    wdt_disable();
     while (WiFi.status() != WL_CONNECTED) {
+        delay(1000);
+        Serial.print(".");
         if (WiFi.status() == WL_CONNECT_FAILED) {
             return false;
         }
         if (WiFi.status() == WL_WRONG_PASSWORD) {
             return false;
         }
-        if (WiFi.status() == WL_DISCONNECTED) {
-            return false;
-        }
     }
+    wdt_enable(5000);
 
     return true;
 }
