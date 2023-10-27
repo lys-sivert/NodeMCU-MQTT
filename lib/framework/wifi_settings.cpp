@@ -2,8 +2,8 @@
 
 #include <ESP8266WiFi.h>
 
-
 namespace WIFI {
+WiFiClient client;
 void init(const char *ssid, const char *password) {
     delay(10);
 
