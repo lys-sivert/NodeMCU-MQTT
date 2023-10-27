@@ -12,8 +12,7 @@ const char *mqtt_client_name = "........";
 void set_pin_0(byte *payload) { digitalWrite(0, payload[0] != '0'); }
 String get_pin_state() { return String("Hello"); }
 
-WiFiClient wifi;
-MQTT_Class mqtt(wifi, mqtt_broker, mqtt_client_name);
+MQTT_Class mqtt(WIFI::client, mqtt_broker, mqtt_client_name);
 
 void setup() {
     WIFI::init(ssid, password);
