@@ -5,14 +5,14 @@
 #define MAX_COMMANDS 64  // the maximum of assignable callbacks to topics
 #define MAX_POINTS 64
 
-class MQTT_Class {
+class MQTTClient {
    public:
     typedef std::function<void(byte *)> MQTT_CALLBACK;
     typedef std::function<String()> MQTT_DATA_CALLBACK;
     enum SendMode { Interval, Change };
 
-    MQTT_Class(Client &client, const char *broker, const char *name);
-    MQTT_Class(Client &client, const char *broker, const char *name, int port);
+    MQTTClient(Client &client, const char *broker, const char *name);
+    MQTTClient(Client &client, const char *broker, const char *name, int port);
 
     void update();
 
@@ -56,7 +56,7 @@ class MQTT_Class {
         MQTT_DATA_CALLBACK callback;
         uint32_t interval;
         uint32_t next_trigger;
-        MQTT_Class::SendMode mode;
+        MQTTClient::SendMode mode;
         String prev_value;
     } MQTT_Point;
 

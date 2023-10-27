@@ -1,9 +1,9 @@
-#include "mqtt_settings.h"
+#include "mqtt_client.h"
 
 #include <Client.h>
 #include <PubSubClient.h>
 
-void MQTT_Class::_process_message(char *topic, byte *payload, unsigned int length) {
+void MQTTClient::_process_message(char *topic, byte *payload, unsigned int length) {
     for (int i = 0; i < _num_commands_assigned; i++) {
         if (strcmp(_commands[i].topic, topic)) {
             _commands[i].callback(payload);
@@ -11,7 +11,7 @@ void MQTT_Class::_process_message(char *topic, byte *payload, unsigned int lengt
     }
 }
 
-MQTT_Class::MQTT_Class(Client &client, const char *broker, const char *name, int port) {
+MQTTClient::MQTTClient(Client &client, const char *broker, const char *name, int port) {
     _client.setClient(client);
 
     _client.setServer(broker, port);
@@ -21,9 +21,9 @@ MQTT_Class::MQTT_Class(Client &client, const char *broker, const char *name, int
         [this](char *topic, uint8_t *payload, unsigned int length) { this->_process_message(topic, payload, length); });
 }
 
-MQTT_Class::MQTT_Class(Client &client, const char *broker, const char *name) { MQTT_Class(client, broker, name, 1883); }
+MQTTClient::MQTTClient(Client &client, const char *broker, const char *name) { MQTTClient(client, broker, name, 1883); }
 
-void MQTT_Class::update() {
+void MQTTClient::update() {
     if (!_client.connected()) {
         _reconnect();
     }
@@ -48,7 +48,7 @@ void MQTT_Class::update() {
     _client.loop();
 }
 
-void MQTT_Class::_reconnect() {
+void MQTTClient::_reconnect() {
     // Loop until we're reconnected
     while (!_client.connected()) {
         String clientId = name;
@@ -61,7 +61,7 @@ void MQTT_Class::_reconnect() {
     }
 }
 
-bool MQTT_Class::add_datapoint(const char *path, SendMode mode, uint32_t interval, MQTT_DATA_CALLBACK callback) {
+bool MQTTClient::add_datapoint(const char *path, SendMode mode, uint32_t interval, MQTT_DATA_CALLBACK callback) {
     if (_num_points_assigned == MAX_POINTS) return false;
     _points[_num_points_assigned] = MQTT_Point{
         topic : path,
@@ -80,7 +80,7 @@ bool MQTT_Class::add_datapoint(const char *path, SendMode mode, uint32_t interva
     return true;
 }
 
-bool MQTT_Class::add_command(const char *path, MQTT_CALLBACK callback) {
+bool MQTTClient::add_command(const char *path, MQTT_CALLBACK callback) {
     if (_num_commands_assigned == MAX_COMMANDS) return false;
     _commands[_num_commands_assigned].callback = callback;
     _commands[_num_commands_assigned].topic = path;
