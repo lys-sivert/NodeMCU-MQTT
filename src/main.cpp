@@ -3,8 +3,6 @@
 #include "mqtt_settings.h"
 #include "wifi_settings.h"
 
-using namespace MQTT;
-
 const char *ssid = "........";
 const char *password = "........";
 
