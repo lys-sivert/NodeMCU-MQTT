@@ -15,7 +15,7 @@ typedef struct {
     const char *topic;
     MQTT_DATA_CALLBACK callback;
     uint32_t interval;
-    uint32_t next;
+    uint32_t next_trigger;
     MQTT::SendMode mode;
     String prev_value;
 } MQTT_Points;
@@ -52,10 +52,12 @@ void update() {
         _reconnect();
     }
 
-    uint32_t cur_ms = client.loop();
+    uint32_t current_time = millis();
+    client.loop();
     for (int i = 0; i < num_points_assigned; i++) {
-        if (cur_ms + points[i].interval > points[i].next) {
-            points[i].next = cur_ms + points[i].interval;
+        if (current_time + points[i].interval > points[i].next_trigger) {
+            points[i].next_trigger = current_time + points[i].interval;
+
             String new_value = points[i].callback();
             if (points[i].mode == SendMode::Change) {
                 if (new_value.equals(points[i].prev_value)) {
@@ -90,7 +92,7 @@ bool add_datapoint(char *path, SendMode mode, uint32_t interval, MQTT_DATA_CALLB
     if (num_points_assigned == MAX_POINTS) return false;
     points[num_points_assigned].callback = callback;
     points[num_points_assigned].interval = interval;
-    points[num_points_assigned].next = 0;
+    points[num_points_assigned].next_trigger = 0;
     points[num_points_assigned].mode = mode;
     points[num_points_assigned].topic = path;
     num_points_assigned++;
