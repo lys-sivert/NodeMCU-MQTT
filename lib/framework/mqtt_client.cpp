@@ -63,14 +63,6 @@ void MQTTClient::_reconnect() {
 
 bool MQTTClient::add_datapoint(const char *path, SendMode mode, uint32_t interval, MQTT_DATA_CALLBACK callback) {
     if (_num_points_assigned == MAX_POINTS) return false;
-    _points[_num_points_assigned] = MQTT_Point{
-        topic : path,
-        callback : callback,
-        interval : interval,
-        next_trigger : 0,
-        mode : mode,
-        prev_value : String()
-    };
     _points[_num_points_assigned].callback = callback;
     _points[_num_points_assigned].interval = interval;
     _points[_num_points_assigned].next_trigger = 0;
