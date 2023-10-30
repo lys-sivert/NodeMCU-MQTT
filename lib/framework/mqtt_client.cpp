@@ -39,6 +39,10 @@ int MQTTClient::connect(Client &client, const char *broker, const char *id) {
 
 int MQTTClient::status() { return _client.state(); }
 
+bool timer_expired(unsigned long current_time, unsigned long started, unsigned long target) {
+    return (current_time - started) >= target;
+}
+
 void MQTTClient::update() {
     if (!_client.connected()) {
         _reconnect();
@@ -47,8 +51,8 @@ void MQTTClient::update() {
     uint32_t current_time = millis();
     _client.loop();
     for (int i = 0; i < _num_points_assigned; i++) {
-        if (current_time - _points[i].next_trigger > _points[i].interval) {
-            _points[i].next_trigger = current_time;
+        if (timer_expired(current_time, _points[i].prev_triggered, _points[i].interval)) {
+            _points[i].prev_triggered = current_time;
 
             String new_value = _points[i].callback();
             if (_points[i].mode == SendMode::Change) {
@@ -81,7 +85,7 @@ bool MQTTClient::add_datapoint(const char *path, SendMode mode, uint32_t interva
     if (_num_points_assigned == MAX_POINTS) return false;
     _points[_num_points_assigned].callback = callback;
     _points[_num_points_assigned].interval = interval;
-    _points[_num_points_assigned].next_trigger = 0;
+    _points[_num_points_assigned].prev_triggered = 0;
     _points[_num_points_assigned].mode = mode;
     _points[_num_points_assigned].topic = path;
     _num_points_assigned++;

@@ -73,7 +73,7 @@ class MQTTClient {
         const char *topic;
         MQTT_DATA_CALLBACK callback;
         uint32_t interval;
-        uint32_t next_trigger;
+        uint32_t prev_triggered;
         MQTTClient::SendMode mode;
         String prev_value;
     } MQTT_Point;
